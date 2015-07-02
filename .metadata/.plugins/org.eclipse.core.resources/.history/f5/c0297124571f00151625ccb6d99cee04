@@ -1,0 +1,165 @@
+import heapq
+from datetime import datetime
+
+def dist(x1,y1,x2,y2):
+    return ((x2-x1)**2 + (y2-y1)**2)**0.5
+
+def dijkstra(adj, costs, s, t):
+    ''' Return predecessors and min distance if there exists a shortest path 
+        from s to t; Otherwise, return None '''
+    Q = []     # priority queue of items; note item is mutable.
+    d = {s: 0} # vertex -> minimal distance
+    Qd = {}    # vertex -> [d[v], parent_v, v]
+    p = {}     # predecessor
+    visited_set = set([s])
+
+    for v in adj.get(s, []):
+        d[v] = costs[s, v]
+        item = [d[v], s, v]
+        heapq.heappush(Q, item)
+        Qd[v] = item
+
+    while Q:
+        #print Q
+        cost, parent, u = heapq.heappop(Q)
+        if u not in visited_set:
+            #print 'visit:', u
+            p[u]= parent
+            visited_set.add(u)
+            if u == t:
+                return p, d[u]
+            for v in adj.get(u, []):
+                if d.get(v):
+                    if d[v] > costs[u, v] + d[u]:
+                        d[v] =  costs[u, v] + d[u]
+                        Qd[v][0] = d[v]    # decrease key
+                        Qd[v][1] = u       # update predecessor
+                        heapq._siftdown(Q, 0, Q.index(Qd[v]))
+                else:
+                    d[v] = costs[u, v] + d[u]
+                    item = [d[v], u, v]
+                    heapq.heappush(Q, item)
+                    Qd[v] = item
+
+    return None
+
+def make_undirected(cost):
+    ucost = {}
+    for k, w in cost.iteritems():
+        ucost[k] = w
+        ucost[(k[1],k[0])] = w
+    return ucost
+
+if __name__=='__main__':
+
+    # adjacent list
+    '''
+    adj = { 1: [2,3,6],
+            2: [1,3,4],
+            3: [1,2,4,6],
+            4: [2,3,5,7],
+            5: [4,6,7],
+            6: [1,3,5,7],
+            7: [4,5,6]}
+
+    # edge costs
+    cost = { (1,2):7,
+            (1,3):9,
+            (1,6):14,
+            (2,3):10,
+            (2,4):15,
+            (3,4):11,
+            (3,6):2,
+            (4,5):6,
+            (5,6):9,
+            (4,7):2,
+            (5,7):1,
+            (6,7):12}
+    
+    s, t = 1, 6
+    '''
+    node = dict()
+    adj = {}
+    cost = {}
+    
+    with open('usa.txt') as file_in :
+        linecount = 1
+        nodecount = 0  
+        
+        for line in file_in : 
+            x = line.split()
+            #print "hi"
+            if linecount == 1 or linecount == 87577 or linecount == 209539 : 
+                linecount = linecount + 1
+                continue
+            
+            elif linecount <= 87576 and linecount >= 2 : 
+                linecount = linecount + 1
+                nodeName = int(x[0]) 
+                node.update( { nodeName : (int(x[1]) , int(x[2]))} )
+                #print nodeName , node[nodeName]
+                
+            elif linecount >= 87578 and linecount <= 209538 : 
+                linecount = linecount + 1 
+                node1 = int(x[0])
+                node2 = int(x[1])
+                
+                distance = dist(node[node1][0],node[node1][1],node[node2][0],node[node2][1])
+                
+                adj.setdefault(node1,[]).append(node2)
+                adj.setdefault(node2,[]).append(node1)
+                
+                cost[(node1,node2)] = distance 
+                
+                
+                #print adj[node1] , adj[node2]
+                
+                #if linecount == 87579 :
+                #    print node[node1][0] , node[node1][1]
+                #   print node[node2][0] , node[node2][1]
+                #    print cost
+               
+            #elif linecount == 209538 :
+            #    src = x[0] 
+            #    sink = x[1]
+  
+    file_in.close()
+    #print cost 
+    cost = make_undirected(cost)
+    
+    
+    word = raw_input("Please input the arguments for the program, ex: D 0 5 -->")
+    words = word.split()
+    srcNode = int(words[1])
+    dstNode = int(words[2])
+        
+    if words[0] == 'D' :
+        
+        sec1 = datetime.now().microsecond
+        #sec1 = now1.second
+        print sec1 
+        
+        predecessors, min_cost = dijkstra(adj, cost, srcNode, dstNode)
+        c = dstNode
+        path = [c]
+        print 'min cost:', min_cost
+        while predecessors.get(c):
+            path.insert(0, predecessors[c])
+            c = predecessors[c]
+        #path.insert(0, srcNode)
+        sec2 = datetime.now().mircrosecond 
+        print sec2
+        
+        taketime = float(sec2-sec1)
+        print taketime
+        
+        print "The distance from node %d to node %d using Dijkstra algorithm is %s"  %(srcNode,dstNode,path)
+        print "The execution time take %f seconds." %taketime
+        
+    elif words[0] == 'B' :
+        print "Bell ! , source node: %d , destination node: %d "  %(srcNode,dstNode)    
+    
+    
+   
+    
+    
