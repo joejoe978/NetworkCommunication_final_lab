@@ -65,14 +65,14 @@ def relax(node, neighbor, graph, d, p):
         # Record this lower distance
         d[neighbor]  = d[node] + graph[node][neighbor]
         p[neighbor] = node
-        
+        print node , d[neighbor] 
  
 def bellman_ford(graph, source):
     d, p = initialize(graph, source)
     for i in range(len(graph)-1): #Run this until is converges
         #print i 
         for u in graph:
-            #print u
+            print u
             for v in graph[u]: #For each neighbour of u
                 relax(u, v, graph, d, p) #Lets relax it
      
