@@ -1,0 +1,29 @@
+空行處 : 1 87577 209539
+
+Please input the arguments for the program, ex: D 0 5 -->D 0 5
+Dij ! , source node: 0 , destination node: 5 
+min cost: 158.55395264
+shortest path: [18, 34, 33, 27, 26, 31, 25, 22, 21, 24, 35, 16, 5]
+
+
+bellman 
+
+{'a': 0, 'c': 2, 'b': -1, 'e': 1, 'd': -2} 
+{'a': None, 'c': 'b', 'b': 'a', 'e': 'b', 'd': 'e'}
+
+{'a': inf, 'c': 3, 'b': 0, 'e': 2, 'd': -1} 
+{'a': None, 'c': 'b', 'b': None, 'e': 'b', 'd': 'e'}
+
+新圖:
+cost: {'a': 0, 'c': 5, 'b': 2, 'e': 10, 'd': 9, 'g': 3, 'f': 1, 'h': 6}
+
+path: {'a': None, 'c': 'b', 'b': 'a', 'e': 'h', 'd': 'c', 'g': 'f', 'f': 'a', 'h': 'g'}
+
+
+87573
+158.55395264 [0, 18, 34, 33, 27, 26, 31, 25, 22, 21, 24, 35, 16, 5]
+2015-07-02 04:23:59.417000
+The distance from node 0 to node 5 using Bellman-Ford algorithm is 158
+The execution time take 12157635 milliseconds.
+The shortest path from node 0 to node 5 is [0, 18, 34, 33, 27, 26, 31, 25, 22, 21, 24, 35, 16, 5].
+
